@@ -1,38 +1,40 @@
-const Tester = require('../dist/biangvalidator');
-console.log(Tester);
+const Validator = require('../dist/biangvalidator');
+console.log(Validator);
 /**
  * 
  */
-let obj = {
-    id: 'asdfasdfas',
-    name: 'aasdfasdf',
-    age: 145,
-    children: [{
-        id: 'asdfasdf',
-        name: 'ab',
-        age: 87,
-        children: [{
-            id: '1412asdf',
-            name: 'sdfsdf',
-            age: 54,
-        }],
-        forTest:[{a:1, b:2, c:3, d:{a:1, zz:2}}, {a:12}, {}]
-    }]
-}
 
-let tester = new Tester({
-    person(val){
-        return this.validate(val, {
-            'id*': 'string',
-            'name*': 'string',
-            'age*': 'number',
-            children: 'array[person]?',
-            forTest: ['object']
-        });
+
+// validator.validate(obj, 'person').then(()=>{
+//     console.log('checked');
+// }).catch(err=>{
+//     console.error(err);
+// });
+let obj = {
+    id: 1,
+    name: '张三',
+    age: 34,
+    children: [{
+        id: 2,
+        name: '张子',
+        age: 12,
+    },{
+        id: 3,
+        name: '张女',
+        age: 10,
+    }]
+};
+
+let validator = new Validator({
+    person:{
+        'id*': 'number',
+        'name*': 'string',
+        'age*': 'number',
+        children: 'array[person]?',
     },
 });
 
-tester.validate(obj, 'person').then(()=>{
+validator.validate(obj, 'person',).then(()=>{
     console.log('checked');
 }).catch(err=>{
     console.error(err);
