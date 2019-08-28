@@ -1,0 +1,27 @@
+{
+  "name": "biangvalidator",
+  "version": "1.0.1",
+  "description": "",
+  "main": "./dist/biangvalidator.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
+  "keywords": [
+    "tester",
+    "validation",
+    "validate"
+  ],
+  "author": "Anfo",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  },
+  "dependencies": {
+    "extend": "^3.0.2"
+  }
+}
