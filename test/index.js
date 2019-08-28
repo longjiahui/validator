@@ -15,22 +15,24 @@ let obj = {
             id: '1412asdf',
             name: 'sdfsdf',
             age: 54,
-        }]
+        }],
+        forTest:[{a:1, b:2, c:3, d:{a:1, zz:2}}, {a:12}, {}]
     }]
 }
 
 let tester = new Tester({
     person(val){
-        return this.test(val, {
+        return this.validate(val, {
             'id*': 'string',
             'name*': 'string',
             'age*': 'number',
             children: 'array[person]?',
+            forTest: ['object']
         });
     },
 });
 
-tester.test(obj, 'person').then(()=>{
+tester.validate(obj, 'person').then(()=>{
     console.log('checked');
 }).catch(err=>{
     console.error(err);

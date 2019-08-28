@@ -178,6 +178,23 @@ export default class BiangValidator{
                 return this.validate(val, obj);
             }
         }
+        //预处理，如果是数组
+        if(origin instanceof Array){
+            rule = 'array';
+            if(origin.length > 0){
+                if(origin.length === 1){
+                    rule = {
+                        '...': origin[0]
+                    }
+                }else if(origin.length > 1){
+                    rule = {};
+                    origin.forEach((item, index)=>{
+                        rule[index] = item;
+                    });
+                }
+                rule = this._preHandleRule(rule);
+            }
+        }
         return rule;
     }
 
@@ -200,6 +217,7 @@ export default class BiangValidator{
             }else if(typeof rule === 'function'){
                 ret = rule.call(this, val, ctx);
             }else if(typeof rule === 'object'){
+                //这里的or和and的value数组不属于规则，会由testOrRules/testAndRules展开数组后将再调用testRule测试下面的规则
                 if(rule.or && rule.or instanceof Array){
                     //testOrRules   
                     return this.testOrRules(val, rule.or, ctx);
@@ -209,10 +227,6 @@ export default class BiangValidator{
                 }else{
                     throw `bad rule: ${this.dumpRule(rule)}`
                 }
-            }else if(rule instanceof Array){
-                //testAndRules
-                //数组类型 默认表示and 规则
-                return this.testAndRules(val, rule.and, ctx);
             }
         }else{
             throw `blank rule`;
