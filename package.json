@@ -11,6 +11,10 @@
     "validation",
     "validate"
   ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/longjiahui/biangvalidator.git"
+  },
   "author": "Anfo",
   "license": "MIT",
   "devDependencies": {
