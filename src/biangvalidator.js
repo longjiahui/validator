@@ -207,7 +207,7 @@ export default class BiangValidator{
                 if(testFunc){
                     try{
                         // testfunc可以返回promise
-                        ret = testFunc.call(this, val, ctx);
+                        ret = testFunc.call(this, val, ctx, this);
                     }catch(err){
                         throw `RULE EXCEPTION: ${this.dumpRule(rule)}, FOR: ${err}`;
                     }
@@ -215,7 +215,7 @@ export default class BiangValidator{
                     throw `can't find rule: ${this.dumpRule(rule)}`;
                 }
             }else if(typeof rule === 'function'){
-                ret = rule.call(this, val, ctx);
+                ret = rule.call(this, val, ctx, this);
             }else if(typeof rule === 'object'){
                 //这里的or和and的value数组不属于规则，会由testOrRules/testAndRules展开数组后将再调用testRule测试下面的规则
                 if(rule.or && rule.or instanceof Array){

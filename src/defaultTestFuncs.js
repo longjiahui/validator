@@ -26,4 +26,7 @@ export default {
     array(val){
         return val instanceof Array;
     },
+    any(){
+        return true;
+    }
 }
