@@ -1,4 +1,13 @@
 export default {
+    truthy(val){
+        return !!val;
+    },
+    truthyString(val){
+        return !!val && typeof val === 'string';
+    },
+    falsy(val){
+        return !val;
+    },
     object(val){
         return val && typeof val === 'object';
     },

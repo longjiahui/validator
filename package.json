@@ -1,10 +1,11 @@
 {
-  "name": "biangvalidator",
-  "version": "1.0.5",
+  "name": "validator-biang",
+  "version": "1.0.7",
   "description": "",
   "main": "./dist/biangvalidator.js",
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "start": "npm run build && node test/index.js"
   },
   "keywords": [
     "tester",
@@ -13,8 +14,8 @@
     "test"
   ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/longjiahui/biangvalidator.git"
+    "type": "git",
+    "url": "https://github.com/longjiahui/biangvalidator.git"
   },
   "author": "Anfo",
   "license": "MIT",
@@ -24,9 +25,9 @@
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.7",
+    "extend": "^3.0.2"
   },
   "dependencies": {
-    "extend": "^3.0.2"
   }
 }

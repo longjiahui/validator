@@ -19,13 +19,12 @@ export default class BiangValidator{
         if(!testFuncs){
             testFuncs = {};
         }
-        Object.assign(testFuncs, defaultTestFuncs);
-        let keys = Object.keys(testFuncs);
-        let upperCaseTestFuncs = {};
+        Object.assign(defaultTestFuncs, testFuncs);
+        let keys = Object.keys(defaultTestFuncs);
+        this._testFuncs = [];
         keys.forEach((key)=>{
-            upperCaseTestFuncs[key.toUpperCase()] = testFuncs[key];
+            this.registerTestFunc(key, defaultTestFuncs[key]);
         });
-        this._testFuncs = upperCaseTestFuncs;
         /* _testFuncs:{
             testString(val){
                 return typeof val === 'string';
@@ -33,8 +32,17 @@ export default class BiangValidator{
         }*/
     }
 
+    registerTestFunc(name, func){
+        if(!name || !func){
+            throw 'args error';
+        }
+        this._testFuncs[name.toUpperCase()] = func;
+    }
+
     validate(val, by){
-        if(typeof by === 'string'){
+        if(typeof by === 'string'
+            || by instanceof RegExp
+            || typeof by === 'function'){
             //默认对当前val进行 test
             by = {'.': by};       
         }
@@ -84,10 +92,11 @@ export default class BiangValidator{
                         promises.push(error());
                     }
                 }else{
-                    //path后面带*是必须存在的path
+                    //改成 后面带？是非必须存在的path
                     let path = key;
-                    let isMustExists = /\*$/.test(path);
-                    path = isMustExists?path.slice(0, path.length - 1):path;
+                    // let isMustExists = /\*$/.test(path);
+                    let isMustExists = !/\?$/.test(path);
+                    path = isMustExists?path:path.slice(0, path.length - 1);
                     region = this.getVal(val, path);
                     if(region === undefined){
                         if(isMustExists){
@@ -144,6 +153,9 @@ export default class BiangValidator{
     //语法糖处理
     _preHandleRule(origin){
         let rule = origin;
+        if(origin instanceof RegExp){
+            return (val)=>origin.test(val);
+        }
         if(origin && typeof origin === 'object'){
             rule = extend(true, {}, origin);
         }
