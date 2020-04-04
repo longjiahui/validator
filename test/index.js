@@ -61,8 +61,10 @@ let obj =
   title: 'test',
   category: 'test'
 } ;
-new Validator().validate(obj, {
-  title: 'truthystring',
+new Validator({
+  a: /test/
+}).validate(obj, {
+  title: 'a',
   content: 'truthystring',
   category: 'truthystring'
 }).then(()=>{

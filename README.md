@@ -32,11 +32,13 @@ const Validator = require('biangvalidator');
 ```javascript
 let obj1 = {
         count: 0,
+        phone: 13422223333
     },
 let validator = new Validator({
     countable(val){
         return val && val.count && isNumber(val.count);
-    }
+    },
+    phone: /^1[3456789]\d{9}$/
 });
 
 validator.validate(objc, 'countable').then(()=>{

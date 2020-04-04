@@ -19,11 +19,15 @@ export default class BiangValidator{
         if(!testFuncs){
             testFuncs = {};
         }
-        Object.assign(defaultTestFuncs, testFuncs);
-        let keys = Object.keys(defaultTestFuncs);
+        let funcs = {};
+        Object.assign(funcs, defaultTestFuncs);
+        Object.assign(funcs, testFuncs);
+        let keys = Object.keys(funcs);
         this._testFuncs = [];
         keys.forEach((key)=>{
-            this.registerTestFunc(key, defaultTestFuncs[key]);
+            this.registerTestFunc(key, function(val){
+                return this.validate(val, funcs[key]);
+            });
         });
         /* _testFuncs:{
             testString(val){
