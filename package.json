@@ -1,6 +1,6 @@
 {
-  "name": "validator-biang",
-  "version": "1.0.9",
+  "name": "@anfo/validator",
+  "version": "1.0.0",
   "description": "",
   "main": "./dist/biangvalidator.js",
   "scripts": {
