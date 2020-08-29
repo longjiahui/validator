@@ -93,9 +93,21 @@ module.exports = {
 
 ### 规则的写法
 
-一条规则可以是字符串，正则表达式，数组或者自定义函数
+一条规则可以是字符串，正则表达式，数组，对象或者自定义函数
 
-##### 使用字符串调用默认/自定义的规则
+#### 使用字符串调用默认/自定义的规则
+
+```javascript
+validator.validate('12', 'number')
+```
+
+#### 使用数组表示逻辑与
+
+```javascript
+validator.validate('12', ['string', /1/, /2/])
+```
+
+#### 使用对象
 
 ```javascript
 validator.validate({
@@ -103,16 +115,90 @@ validator.validate({
     b: 12,
     c: null
 }, {
-    a: 'string',
     b: 'number',
-    c: /1234$/, 
+    a: 'string',
+    c: null
 })
 ```
 
-##### 使用数组表示逻辑与
+##### 使用$
 
 ```javascript
 validator.validate({
-    
+    a: '123124124',
+    b: 1241231,
+    c: null
+}, {
+    // key后加$ 表示可以不存在，否则必须存在
+    a$: 'string',
+    b: 'number',
+    // 字符规则后加$表示可以为null/undefined
+    c: 'number$',
+    // $表示被验证的对象本身
+    $: 'object',
+    // $spread 表示当前被验证对象下的所有值，表示...obj
+    $spread: 'truthy',
+    // $or 表示一条规则，表示验证对象需要至少符合数组内的任一项
+    $or: ['string' , 'object'],
 })
+```
+
+##### 使用$来对描述复杂的require关系
+
+```javascript
+validator.validate({
+    a: '123124124',
+    b: 1241231,
+    c: null
+}, {
+    //当a存在是 c必须存在，a不存在时，c也可以不存在
+    a$: 'string',
+    b: 'number',
+    c$: 'null',
+    $(val){
+        if(val.a){
+            return val.c !== undefined
+        }else{
+            return true
+        }
+    }
+}
+```
+
+##### 使用字符串[]来描述数组中的类型
+
+```javascript
+/*
+array[number]规则表示{
+    $: 'array',
+    $spread: 'number'
+} 的语法糖
+*/
+validator.validate([12, 13, 12343], 'array[number]')
+```
+
+#### 递归验证的例子
+```javascript
+validator.addPresetRule('person', {
+    name: 'truthyString',
+    age: 'number',
+    children$: 'array[person]$'
+})
+validator.addPresetRule('people', 'array[person]')
+const data = [{
+    name: '龙一',
+    age: 55,
+    children: [{
+        name: '龙二',
+        age: 32
+    }]
+}, {
+    name: '落一',
+    age: 45,
+    children: [{
+        name: '落二',
+        age: 12
+    }]
+}]
+validator.validate(data, 'people')
 ```
