@@ -1,4 +1,4 @@
-const Validator = require('../dist/index')
+const Validator = require('../dist/main')
 const assert = require('assert')
 
 describe('Validator', function(){
@@ -48,6 +48,10 @@ describe('Validator', function(){
         }))
     })
     it('object-optional', async function(){
+        assert(!await validator.validate({a: 135214, b: 'asdfasdfasdf'}, {
+            a: 'number',
+            b$: 'number'
+        }))
         assert(await validator.validate({a: 135214}, {
             a: 'number',
             b$: 'number'
@@ -57,12 +61,12 @@ describe('Validator', function(){
             b: 'number'
         }))
     })
-    it('object-$spread', async function(){
+    it('object-$listItem', async function(){
         assert(!await validator.validate({a: '12512', b: 1241}, {
-            $spread: 'number'
+            $listItem: 'number'
         }))
         assert(validator.validate({a: 125142, b: 124}, {
-            $spread: 'number'
+            $listItem: 'number'
         }))
     })
 
@@ -97,5 +101,46 @@ describe('Validator', function(){
         assert(await validator.validate(data, 'people'))
         data[0].name = ''
         assert(!await validator.validate(data, 'people'))
+    })
+
+    it('escape-$', async function(){
+        // suffix
+        assert(!await validator.v({
+            a$: 1,
+        }, {
+            a$$: 'string',
+        }))
+        assert(await validator.v({
+            a$: 1,
+        }, {
+            a$$: 'number',
+        }))
+
+        //prefix
+        assert(await validator.v({
+            $: 1,
+        }, {
+            $$: 'number',
+        }))
+        assert(!await validator.v({
+            $listItem: 1,
+        }, {
+            $$listItem: 'string',
+        }))
+        assert(await validator.v({
+            $listItem: 1,
+        }, {
+            $$listItem: 'number',
+        }))
+        assert(await validator.v({
+            $$listItem: 1,
+        }, {
+            $$$listItem: 'number',
+        }))
+        assert(!await validator.v({
+            $$listItem: 1,
+        }, {
+            $$$listItem: 'string',
+        }))
     })
 })

@@ -26,11 +26,13 @@ const validator = new Validator({
 
 ;(async ()=>{
     const valid = await validator.validate('15600001111', 'mobile')
+    // 等同于
+    // const valid = await validator.v('15600001111', 'mobile')
     // true
 })()
 ```
 
-### 默认的预设 Default preset
+### 默认的测试函数 Default Test Functions
 
 - truthy - 真值
 - falsy - 假值
@@ -95,22 +97,22 @@ module.exports = {
 
 一条规则可以是字符串，正则表达式，数组，对象或者自定义函数
 
-#### 使用字符串调用默认/自定义的规则
+#### 使用字符串调用默认/自定义的测试函数
 
 ```javascript
-validator.validate('12', 'number')
+validator.v('12', 'number')
 ```
 
 #### 使用数组表示逻辑与
 
 ```javascript
-validator.validate('12', ['string', /1/, /2/])
+validator.v('12', ['string', /1/, /2/])
 ```
 
 #### 使用对象
 
 ```javascript
-validator.validate({
+validator.v({
     a: '12',
     b: 12,
     c: null
@@ -124,7 +126,7 @@ validator.validate({
 ##### 使用$
 
 ```javascript
-validator.validate({
+validator.v({
     a: '123124124',
     b: 1241231,
     c: null
@@ -136,17 +138,17 @@ validator.validate({
     c: 'number$',
     // $表示被验证的对象本身
     $: 'object',
-    // $spread 表示当前被验证对象下的所有值，表示...obj
-    $spread: 'truthy',
+    // $subItem 表示当前验证被验证对象/数组下的所有值，表示...obj或...array
+    $subItem: 'truthy',
     // $or 表示一条规则，表示验证对象需要至少符合数组内的任一项
     $or: ['string' , 'object'],
 })
 ```
 
-##### 使用$来对描述复杂的require关系
+##### 使用$来描述复杂的require关系
 
 ```javascript
-validator.validate({
+validator.v({
     a: '123124124',
     b: 1241231,
     c: null
@@ -171,10 +173,10 @@ validator.validate({
 /*
 array[number]规则表示{
     $: 'array',
-    $spread: 'number'
+    $subItem: 'number'
 } 的语法糖
 */
-validator.validate([12, 13, 12343], 'array[number]')
+validator.v([12, 13, 12343], 'array[number]')
 ```
 
 #### 递归验证的例子
@@ -200,5 +202,27 @@ const data = [{
         age: 12
     }]
 }]
-validator.validate(data, 'people')
+validator.v(data, 'people')
+```
+
+#### 转义$
+
+```javascript
+validator.v({
+    a$: 1,
+}, {
+    a$$: 'number',
+})// Promise.resolve(true)
+
+await validator.v({
+    $: 1,
+}, {
+    $$: 'number',
+})// Promise.resolve(true)
+
+!await validator.v({
+    $listItem: 1,
+}, {
+    $$listItem: 'string',
+})// Promise.resolve(false)
 ```
