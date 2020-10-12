@@ -97,10 +97,36 @@ module.exports = {
 
 一条规则可以是字符串，正则表达式，数组，对象或者自定义函数
 
-#### 使用字符串调用默认/自定义的测试函数
+#### 使用字符串
+
+##### 调用默认/自定义的测试函数
 
 ```javascript
 validator.v('12', 'number')
+```
+
+##### 逻辑与/或的字符串写法
+```javascript
+assert(!await validator.v([1, 2], 'object && number'))
+assert(await validator.v([1, 2], 'object && array'))
+assert(!await validator.v([1, 2], 'string || number'))
+assert(await validator.v([1, 2], 'object || number'))
+```
+
+##### 简单表达式(判断相等/表达式)
+```javascript
+// >
+assert(await validator.validate(12, '>10'))  
+// >=
+assert(await validator.validate(12, '>=12'))
+// <=
+assert(await validator.validate(12, '<=12'))
+// =
+assert(await validator.validate(12, '=12'))
+assert(await validator.validate('12', '=12'))
+// 如果要判断类型，则需要使用 && 来进行指定
+assert(!await validator.validate(12, 'string && =12'))
+assert(await validator.validate(12, 'number && =12'))
 ```
 
 #### 使用数组表示逻辑与
@@ -221,8 +247,8 @@ await validator.v({
 })// Promise.resolve(true)
 
 !await validator.v({
-    $listItem: 1,
+    $subItem: 1,
 }, {
-    $$listItem: 'string',
+    $$subItem: 'string',
 })// Promise.resolve(false)
 ```

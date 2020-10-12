@@ -20,6 +20,23 @@ describe('Validator', function(){
         assert(await validator.validate(null, 'number$'))
         assert(!await validator.validate(null, 'number'))
     })
+    it('string-and-or', async function(){
+        assert(!await validator.validate([1, 2], 'object && number'))
+        assert(await validator.validate([1, 2], 'object && array'))
+        assert(!await validator.validate([1, 2], 'string || number'))
+        assert(await validator.validate([1, 2], 'object || number'))
+    })
+    it('string-const-value', async function(){
+        assert(await validator.validate(12, '>10'))  
+        assert(!await validator.validate(12, '>12'))
+        assert(await validator.validate(12, '>=12'))
+        assert(await validator.validate(12, '<=12'))
+        assert(!await validator.validate(12, '<=11'))
+        assert(await validator.validate(12, '=12'))
+        assert(await validator.validate('12', '=12'))
+        assert(!await validator.validate(12, 'string && =12'))
+        assert(await validator.validate(12, 'number && =12'))
+    })
 
     it('regexp', async function(){
         assert(await validator.validate('14124$$', /\$$/))
@@ -142,5 +159,33 @@ describe('Validator', function(){
         }, {
             $$$listItem: 'string',
         }))
+    })
+
+    it('keep-arguments-unchange', async function(){
+        let rule = {
+            a: 1,
+            b: {
+                c: 1,
+                d: 2
+            },
+            $subItem: {
+                id: 1,
+            },
+            $or: ['number', 'string'],
+            $: 'object'
+        }
+        validator.v(1, rule)
+        assert(await validator.v(rule, {
+            a: val=>val===1,
+            b: {
+                c: val=>val===1,
+                d: val=>val===2,
+            },
+            $$subItem: {
+                id: val=>val===1
+            },
+            $$or: 'array[string]',
+            $$: 'string'
+        }), JSON.stringify(rule))
     })
 })

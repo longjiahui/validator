@@ -22,6 +22,7 @@ module.exports = {
             },
             doObjectRule(rule){
                 // 预处理一下'$subItem' '$or' 的情况 ...
+                rule = {...rule}
                 let rules = []
                 let keys = Object.keys(rule)
                 if(keys.includes('$subItem')){
