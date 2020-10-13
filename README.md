@@ -124,6 +124,7 @@ assert(await validator.validate(12, '<=12'))
 // =
 assert(await validator.validate(12, '=12'))
 assert(await validator.validate('12', '=12'))
+assert(await validator.validate('abcdefg', '=abcdefg'))
 // 如果要判断类型，则需要使用 && 来进行指定
 assert(!await validator.validate(12, 'string && =12'))
 assert(await validator.validate(12, 'number && =12'))

@@ -34,8 +34,11 @@ describe('Validator', function(){
         assert(!await validator.validate(12, '<=11'))
         assert(await validator.validate(12, '=12'))
         assert(await validator.validate('12', '=12'))
+        assert(await validator.validate('abcdefg', '=abcdefg'))
         assert(!await validator.validate(12, 'string && =12'))
         assert(await validator.validate(12, 'number && =12'))
+        assert(await validator.validate('12', 'string && =12'))
+        assert(!await validator.validate('12', 'number && =12'))
     })
 
     it('regexp', async function(){
