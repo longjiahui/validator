@@ -34,12 +34,16 @@ module.exports = {
                                         // 处理常数判断的问题 =10, >10 之类的，不能处理===的情况，都是==的判断
                                         // 如果要判断类型需要使用'string && =10'
                                         // 判断= 的情况
-                                        let res = /^=\s*(\S+)$/.exec(rule)
+                                        let res = /^=(.+)$/.exec(rule)
                                         if(!res){
                                             // 判断> < >= <=的情况 只能是数值
                                             res = /^([><]|>=|<=)\s*(\d+)$/.exec(rule)
                                             if(!res){
                                                 parsedRule = v.getPresetRule(rule)
+                                                if(!parsedRule){
+                                                    console.debug('rule not found: ' + rule)
+                                                    parsedRule = val=>false
+                                                }
                                             }else{
                                                 // > < >= <=的情况 数值
                                                 let op = res[1]

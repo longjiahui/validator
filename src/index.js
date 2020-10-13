@@ -41,7 +41,7 @@ module.exports = class {
         return this.validate(...rest)
     }
     
-    async _validate(val, rule){
+    async validate(val, rule){
         for(let parser of this.ruleParsers){
             let parsedRule = parser.parseRule(rule)
             if(parsedRule){
