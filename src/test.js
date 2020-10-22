@@ -7,6 +7,11 @@ describe('Validator', function(){
             return typeof val === 'number'
         }
     })
+
+    it('boolean-const-value', async function(){
+        assert(!await validator.validate(true, false))
+        assert(await validator.validate(true, true))
+    })
     it('string', async function(){
         //1 常规字符串
         assert(await validator.validate(1241242, 'number'))
@@ -25,6 +30,15 @@ describe('Validator', function(){
         assert(await validator.validate([1, 2], 'object && array'))
         assert(!await validator.validate([1, 2], 'string || number'))
         assert(await validator.validate([1, 2], 'object || number'))
+
+        // && 优先的问题 true || false && false
+        let newValidator = new Validator()
+        newValidator.addPresetRules({
+            true: ()=>true,
+            false: ()=>false
+        })
+        // 假如||优先，那么这里就是false，假如&&优先，那么这里就是true
+        assert(await newValidator.validate(true, 'true || false && false'))
     })
     it('string-const-value', async function(){
         assert(await validator.validate(12, '>10'))  
@@ -32,15 +46,19 @@ describe('Validator', function(){
         assert(await validator.validate(12, '>=12'))
         assert(await validator.validate(12, '<=12'))
         assert(!await validator.validate(12, '<=11'))
-        assert(await validator.validate(12, '=12'))
+        // =xxx表示字符串
+        assert(!await validator.validate(12, '=12'))
         assert(await validator.validate('12', '=12'))
         assert(await validator.validate(' abc defg', '= abc defg'))
         assert(await validator.validate('abcdefg', '=abcdefg'))
         assert(!await validator.validate(' abc defg', '= abc defg '))
-        assert(!await validator.validate(12, 'string && =12'))
-        assert(await validator.validate(12, 'number && =12'))
-        assert(await validator.validate('12', 'string && =12'))
-        assert(!await validator.validate('12', 'number && =12'))
+    })
+    it('number-const-value', async function(){
+        // =xxx表示字符串
+        assert(!await validator.validate(12, 13))
+        assert(await validator.validate(12, 12))
+        assert(!await validator.validate(NaN, 12))
+        assert(await validator.validate(NaN, NaN))
     })
 
     it('regexp', async function(){

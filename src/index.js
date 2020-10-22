@@ -4,6 +4,8 @@ const stringMod = require('./module/string')
 const arrayMod = require('./module/array')
 const regexpMod = require('./module/regexp')
 const objectMod = require('./module/object')
+const numberMod = require('./module/number')
+const booleanMod = require('./module/boolean')
 
 module.exports = class {
     constructor(presetRules){
@@ -17,10 +19,12 @@ module.exports = class {
         Object.assign(this, utils)
         this.ruleParsers = []
 
+        this.use(booleanMod)
         this.use(objectMod)
         this.use(stringMod)
         this.use(arrayMod)
         this.use(regexpMod)
+        this.use(numberMod)
     }
 
     use(mod){
@@ -32,6 +36,11 @@ module.exports = class {
 
     addPresetRule(key, rule){
         this.presetRules[key.toUpperCase()] = rule
+    }
+    addPresetRules(rules){
+        Object.keys(rules).forEach(k=>{
+            this.addPresetRule(k, rules[k])
+        })
     }
     getPresetRule(key){
         return this.presetRules[key.toUpperCase()]

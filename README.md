@@ -121,8 +121,10 @@ assert(await validator.validate(12, '>10'))
 assert(await validator.validate(12, '>=12'))
 // <=
 assert(await validator.validate(12, '<=12'))
+
 // =
-assert(await validator.validate(12, '=12'))
+// 验证字符串，数值会返回false
+assert(!await validator.validate(12, '=12'))
 assert(await validator.validate('12', '=12'))
 assert(await validator.validate('abcdefg', '=abcdefg'))
 assert(await validator.validate(' abc defg', '= abc defg'))
@@ -130,6 +132,25 @@ assert(!await validator.validate(' abc defg', '= abc defg '))
 // 如果要判断类型，则需要使用 && 来进行指定
 assert(!await validator.validate(12, 'string && =12'))
 assert(await validator.validate(12, 'number && =12'))
+// && 优先于 || 
+// 假如||优先，那么这里就是false，假如&&优先，那么这里就是true
+assert(await newValidator.validate(true, 'true || false && false'))
+```
+
+#### 使用boolean表达boolean常数
+
+```javascript
+assert(!await validator.validate(true, false))
+assert(await validator.validate(true, true))
+```
+
+#### 使用number表示number常数
+
+```javascript
+assert(!await validator.validate(12, 13))
+assert(await validator.validate(12, 12))
+assert(!await validator.validate(NaN, 12))
+assert(await validator.validate(NaN, NaN))
 ```
 
 #### 使用数组表示逻辑与

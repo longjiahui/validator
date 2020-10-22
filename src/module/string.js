@@ -7,14 +7,15 @@ module.exports = {
                     // 匹配上了规则之后一定要修改parsedRule
                     if(typeof rule === 'string'){
                         // 处理|| && 的情况
-                        rule = rule.split('&&')
+                        // 需要先处理|| 再处理&& 的情况，因为&&的优先度更高，所以应该将&&的两边划分为一个规则
+                        rule = rule.split('||')
                         if(rule.length > 1){
-                            parsedRule = rule.map(r=>r.trim())
+                            parsedRule = {$or: rule.map(r=>r.trim())}
                         }else{
                             rule = rule[0]
-                            rule = rule.split('||')
+                            rule = rule.split('&&')
                             if(rule.length > 1){
-                                parsedRule = {$or: rule.map(r=>r.trim())}
+                                parsedRule = rule.map(r=>r.trim())
                             }else{
                                 rule = rule[0]
 
@@ -53,7 +54,7 @@ module.exports = {
                                         }else{
                                             // = 的情况
                                             let cond = res[1]
-                                            parsedRule = val=>val == cond
+                                            parsedRule = val=>val === cond
                                         }
                                     }
                                 }
