@@ -47,8 +47,12 @@ describe('Validator', function(){
         assert(await validator.validate(12, '<=12'))
         assert(!await validator.validate(12, '<=11'))
         // =xxx表示字符串
-        assert(!await validator.validate(12, '=12'))
+        assert(await validator.validate(12, '=12'))
         assert(await validator.validate('12', '=12'))
+        assert(await validator.validate('12', 'string && =12'))
+        assert(!await validator.validate('12', 'number && =12'))
+        assert(await validator.validate(12, 'number && =12'))
+        assert(!await validator.validate(12, 'string && =12'))
         assert(await validator.validate(' abc defg', '= abc defg'))
         assert(await validator.validate('abcdefg', '=abcdefg'))
         assert(!await validator.validate(' abc defg', '= abc defg '))

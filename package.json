@@ -1,8 +1,8 @@
 {
   "name": "@anfo/validator",
-  "version": "2.2.1",
+  "version": "2.2.4",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "scripts": {
     "start": "webpack --config webpack.config.js && npm test",
     "build": "webpack --config webpack.config.js",

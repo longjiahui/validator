@@ -54,7 +54,7 @@ module.exports = {
                                         }else{
                                             // = 的情况
                                             let cond = res[1]
-                                            parsedRule = val=>val === cond
+                                            parsedRule = val=>val == cond
                                         }
                                     }
                                 }
