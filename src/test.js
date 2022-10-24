@@ -7,11 +7,16 @@ describe('Validator', function(){
             return typeof val === 'number'
         }
     })
+    it('null-const-value', async function(){
+        assert(await validator.validate(null, 'null'))
+        assert(!await validator.validate(null, null))
+    })
 
     it('boolean-const-value', async function(){
         assert(!await validator.validate(true, false))
         assert(await validator.validate(true, true))
     })
+
     it('string', async function(){
         //1 常规字符串
         assert(await validator.validate(1241242, 'number'))
@@ -48,6 +53,7 @@ describe('Validator', function(){
         assert(!await validator.validate(12, '<=11'))
         // =xxx表示字符串
         assert(await validator.validate(12, '=12'))
+        assert(await validator.validate(-12, '=-12'))
         assert(await validator.validate('12', '=12'))
         assert(await validator.validate('12', 'string && =12'))
         assert(!await validator.validate('12', 'number && =12'))
