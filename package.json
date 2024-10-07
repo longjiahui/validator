@@ -1,6 +1,6 @@
 {
     "name": "@anfo/validator",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "description": "",
     "files": ["dist"],
     "main": "./dist/index.js",
