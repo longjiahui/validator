@@ -7,6 +7,7 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "scripts": {
+        "prepublishOnly": "tsc",
         "build": "tsc",
         "lint": "tsc --noEmit",
         "test": "tsc-watch -P tsconfig.test.json --onSuccess \"node ./node_modules/mocha/bin/_mocha --recursive ./dist_test/**/*.spec.js\""
