@@ -1,8 +1,10 @@
 {
     "name": "@anfo/validator",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "",
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "main": "./dist/index.js",
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
